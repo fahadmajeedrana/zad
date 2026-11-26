@@ -1,0 +1,35 @@
+{
+  "name": "زاد الطالب — Zad-ut-Talib",
+  "short_name": "زاد الطالب",
+  "description": "طالب علم کا زادِ راہ: صفوۃ المصادر، گردانیں، ذخیرہ الفاظ اور صرف و نحو کے قواعد",
+  "lang": "ur",
+  "dir": "rtl",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f1ea",
+  "theme_color": "#2f5d3a",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
