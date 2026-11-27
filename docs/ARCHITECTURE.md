@@ -53,6 +53,25 @@ Deviations from the handoff, on purpose:
 
 ## 3. RAG design ("ask the books")
 
+### Current direction (decided 2026-11-28; supersedes the Azure retrieval plan below)
+
+**Retrieval runs in the browser, with no Azure at all.** This is built on the `semantic-search` branch, at `/search`.
+- `multilingual-e5-small` (int8) runs in a Web Worker via transformers.js.
+- The passage vectors are precomputed and shipped as a static file (2,166 chunks, 1.1 MB).
+- Roman Urdu questions are first converted to Urdu script (`src/core/roman.js`).
+- This works offline and costs nothing, so Azure AI Search isn't needed at this corpus size. It should still fit once the full books arrive: about 9k chunks is about 3.5 MB of vectors.
+
+**AI-written answers are not built yet.** When added, they need a small server that holds the model API key: an Azure Function (Flex Consumption) or a Cloudflare Worker. The plan for that server:
+- **Sign-in:** Google sign-in on the client. The function verifies the Google ID token.
+- **Access control:** a Table Storage list of allowed users, roles, quotas and expiry, plus per-user daily limits.
+- **Model:** a cheap or free model (Gemini Flash-Lite / a "mini" model / Haiku, or a free tier).
+- **Who does what:** the browser sends the question plus the top passages it found; the server only writes the answer.
+- **Rules:** the principles below still apply.
+
+Never put an API key or function key in the static site.
+
+The rest of this section is the original Azure-retrieval design, kept for reference.
+
 ### Principles (from the product, doc 01)
 The app adds no outside material. The assistant must therefore:
 - answer **only** from retrieved passages, in Urdu;

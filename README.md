@@ -43,6 +43,40 @@ To add a new topic-summary book (e.g. اصول فقہ):
 4. Replace the "soon" row in `src/features/home/subjects.ts`.
 5. Add the route name to `VIEWS` in `src/router.ts`.
 
+## تلاش بالمعنی (semantic search, experimental)
+
+Students open it with the **search icon in the header**, available on every screen. They can also use a link: `/zad/search?q=<question>` runs the question directly.
+
+They ask in their own words and get the books' own passages, with references. Nothing is written by an AI model.
+
+Above the passages, a **"کتابوں سے جواب"** box shows the 2–3 sentences that best answer the question, quoted word for word from the top passages (`src/features/search/answer.ts`). Each sentence:
+- carries a citation (book › topic, page; or part › باب, hadith number);
+- links to its passage below, where the quoted item is highlighted.
+
+To check the answer quality: `ANSWER_EVAL=1 npx vitest run tests/answer.eval.test.ts --silent=false` prints the picked sentences for sample questions.
+
+**Known weakness:** negation. For "روزہ کن چیزوں سے ٹوٹتا ہے" the search tends to rank the topic "جن چیزوں سے روزہ نہیں ٹوٹتا" too. The page asks students to read the full passage and to ask their teacher about rulings.
+
+Everything runs in the browser:
+
+- **Passage data:** the books are split into 2,166 passages (long topics in ~600-character pieces, plus every hadith). `npm run embeddings` converts each one into a vector with `Xenova/multilingual-e5-small`. The result is stored as int8 vectors in `content/generated/semantic.json` (1.1 MB), which is committed, so CI never needs the model.
+- **In the browser:** a Web Worker runs the same model with transformers.js and ranks passages by dot product. Searches take about 50–200 ms.
+- **Download:** the model (~118 MB) is fetched from the Hugging Face hub only after the student taps a button. It's then cached, so search works offline afterwards. The vectors and the worker are also cached on first use; they aren't part of the app install.
+- **Keeping it current:** after editing content, run `npm run embeddings`. `npm run content` warns when the vectors are stale.
+- **Roman Urdu** ("wuzu kin cheezon se toot jata hai?") works too. The model only understands Urdu script, so `src/core/roman.js` first converts each Roman word to the closest-sounding word from the books' own vocabulary:
+  - short grammar words (kya, hai, mein, ki…) come from a fixed list;
+  - a short list of subject terms with common Roman spellings is checked next;
+  - the page shows the student the Urdu it understood, so a wrong guess is visible.
+- **Measuring quality:** `npm run eval:search -- [model] [--index] [--roman|--heldout] [--translit] [--noterms]` scores search on student-style questions with known answers. `--index` uses the committed vectors (exactly what the app ships).
+
+| Questions | Correct answer first | In top 5 |
+|---|---|---|
+| Urdu script (24) | 21 | 24 |
+| Roman Urdu (same 24), converted, no term list | 20 | 24 |
+| Roman Urdu held-out set (16, never tuned on), converted, no term list | 11 | 15 |
+| Roman Urdu without conversion | 0 | 0 |
+| (paraphrase-multilingual-MiniLM instead of e5-small, Urdu) | 6 | 15 |
+
 ## Deploy (GitHub Pages)
 
 The site is served from <https://fahadmajeedrana.github.io/zad/>. One repository holds both the source and the deployment: GitHub Actions builds `dist/` and publishes it, so no built files are committed.

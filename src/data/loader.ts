@@ -2,6 +2,7 @@
 // A promise is memoised per key; a failed load is forgotten so a retry works.
 import manifest from '../generated/data-manifest.json';
 import type { CoreRaw, HadithPart, RefSection } from './types';
+import type { SemanticRaw } from '../features/search/semantic';
 
 export type DataKey = keyof typeof manifest.files;
 export const DATA_META = manifest.meta;
@@ -13,6 +14,7 @@ export interface DataMap {
   uhadith: RefSection[];
   tafsir: RefSection[];
   hadith: HadithPart[];
+  semantic: SemanticRaw;
 }
 
 const cache: Partial<Record<DataKey, Promise<unknown>>> = {};
