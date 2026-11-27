@@ -1,9 +1,10 @@
-// Minimal path router (10 flat routes; no library needed). Azure Static Web Apps serves
-// index.html for unknown paths (staticwebapp.config.json → navigationFallback).
+// Minimal path router (flat routes; no library needed). On GitHub Pages, unknown paths are
+// served by 404.html (a copy of index.html, see scripts/postbuild.mjs).
 // Old hash links (#masadir) from the previous app are redirected to paths.
+// Query params carry deep links, e.g. /fiqh?t=f1b1:20 or /ahadith?b=h1:0.
 import { useSyncExternalStore } from 'react';
 
-export const VIEWS = ['home', 'masadir', 'vocab', 'qawaid', 'ahadith', 'fiqh', 'uhadith', 'tafsir', 'study', 'maker'] as const;
+export const VIEWS = ['home', 'masadir', 'vocab', 'qawaid', 'ahadith', 'fiqh', 'uhadith', 'tafsir', 'study', 'maker', 'search'] as const;
 export type View = (typeof VIEWS)[number];
 
 const BASE = import.meta.env.BASE_URL; // '/' or '/sub/'

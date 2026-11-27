@@ -41,9 +41,17 @@ export default defineConfig({
         // Removes the previous app's 'zad-<hash>' caches once the new worker activates.
         importScripts: ['sw-cleanup-legacy.js'],
         cleanupOutdatedCaches: true,
+        // Semantic search: the worker bundle and vectors are cached on first use, not at install.
+        globIgnores: ['**/embed.worker-*.js', '**/data/semantic.*.json'],
+        runtimeCaching: [
+          { urlPattern: /\/data\/semantic\.[0-9a-f]+\.json$/, handler: 'CacheFirst', options: { cacheName: 'zad-semantic' } },
+          { urlPattern: /\/assets\/embed\.worker-.*\.js$/, handler: 'CacheFirst', options: { cacheName: 'zad-semantic' } },
+          { urlPattern: /^https:\/\/cdn\.jsdelivr\.net\/npm\/onnxruntime-web@/, handler: 'CacheFirst', options: { cacheName: 'zad-onnxruntime', cacheableResponse: { statuses: [0, 200] } } },
+        ],
       },
     }),
   ],
+  worker: { format: 'es' },
   test: {
     include: ['tests/**/*.test.ts'],
   },

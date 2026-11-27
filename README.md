@@ -43,6 +43,16 @@ To add a new topic-summary book (e.g. اصول فقہ):
 4. Replace the "soon" row in `src/features/home/subjects.ts`.
 5. Add the route name to `VIEWS` in `src/router.ts`.
 
+## تلاش بالمعنی (semantic search, experimental)
+
+`/zad/search` (not linked from the menu yet) lets students ask in their own words. It returns the books' own passages with references; it does not write answers. Everything runs in the browser:
+
+- **Passage data:** the books are split into 2,166 passages (long topics in ~600-character pieces, plus every hadith). `npm run embeddings` converts each one into a vector with `Xenova/multilingual-e5-small`. The result is stored as int8 vectors in `content/generated/semantic.json` (1.1 MB), which is committed, so CI never needs the model.
+- **In the browser:** a Web Worker runs the same model with transformers.js and ranks passages by dot product. Searches take about 50–200 ms.
+- **Download:** the model (~118 MB) is fetched from the Hugging Face hub only after the student taps a button. It's then cached, so search works offline afterwards. The vectors and the worker are also cached on first use; they aren't part of the app install.
+- **Keeping it current:** after editing content, run `npm run embeddings`. `npm run content` warns when the vectors are stale.
+- **Measuring quality:** `npm run eval:search [model…]` scores models on 24 student-style questions with known answers. Results: e5-small puts the correct answer first for 19/24 questions and in the top 5 for all 24; paraphrase-multilingual-MiniLM gets 6/24 first and 15/24 in the top 5.
+
 ## Deploy (GitHub Pages)
 
 The site is served from <https://fahadmajeedrana.github.io/zad/>. One repository holds both the source and the deployment: GitHub Actions builds `dist/` and publishes it, so no built files are committed.

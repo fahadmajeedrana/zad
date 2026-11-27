@@ -1,9 +1,10 @@
 // کتاب الحدیث (doc 02): parts, ابواب with کتاب dividers, glossary chips, hide-translation.
-import { useDeferredValue, useMemo, useState } from 'react';
+import { useDeferredValue, useEffect, useMemo, useState } from 'react';
 import { gnorm } from '../../core/text';
 import { onLoad } from '../../data/loader';
 import type { Hadith, HadithPart } from '../../data/types';
 import { useData } from '../../app/context';
+import { useRoute } from '../../router';
 import { usePref } from '../../state/prefs';
 import { Empty, HideToggle, Hl, SayButton, SearchField, SectionTitle } from '../../ui/controls';
 
@@ -39,6 +40,18 @@ function Body({ data }: { data: HadithPart[] }) {
   const [q, setQ] = useState('');
   const qn = gnorm(useDeferredValue(q).trim()).trim();
   const [revealed, setRevealed] = useState<Set<string>>(new Set());
+
+  // Deep link from search results: ?b=<part>:<babIndex>
+  const { view, params } = useRoute();
+  const linkB = view === 'ahadith' ? params.get('b') : null;
+  useEffect(() => {
+    if (!linkB) return;
+    const p = linkB.split(':')[0];
+    if (!data.some((x) => x.k === p)) return;
+    setPart(p);
+    setBab(linkB);
+    setQ('');
+  }, [linkB]);
 
   const parts = data.filter((p) => part === 'all' || p.k === part);
   const babOpts = useMemo(() => {

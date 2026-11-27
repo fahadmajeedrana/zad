@@ -145,6 +145,18 @@ for (const [k, v] of Object.entries(data)) {
   files[k] = `data/${name}`;
   keep.add(name);
 }
+// Semantic-search vectors are precomputed by `npm run embeddings` (needs the model) and committed.
+const semFile = C('generated/semantic.json');
+if (fs.existsSync(semFile)) {
+  const bytes = fs.readFileSync(semFile);
+  const name = `semantic.${crypto.createHash('sha256').update(bytes).digest('hex').slice(0, 10)}.json`;
+  fs.writeFileSync(path.join(outDir, name), bytes);
+  files.semantic = `data/${name}`;
+  keep.add(name);
+  const { sources } = JSON.parse(bytes.toString('utf8'));
+  const stale = Object.entries(sources).filter(([k, f]) => files[k] !== f).map(([k]) => k);
+  if (stale.length) console.warn(`⚠ semantic search is out of date (${stale.join(', ')} changed) — run: npm run embeddings`);
+}
 for (const f of fs.readdirSync(outDir)) if (f.endsWith('.json') && !keep.has(f)) fs.rmSync(path.join(outDir, f));
 
 const topics = (secs) => secs.reduce((n, s) => n + s.x.length, 0);

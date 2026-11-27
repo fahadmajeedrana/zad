@@ -19,6 +19,7 @@ import { REF_BOOKS, RefBook } from '../features/refbook/RefBook';
 import { Ahadith } from '../features/hadith/Ahadith';
 import { Vocab } from '../features/vocab/Vocab';
 import { Study } from '../features/study/Study';
+import { SemanticSearch } from '../features/search/SemanticSearch';
 
 export function App() {
   const [core, setCore] = useState<Core | null>(null);
@@ -101,6 +102,7 @@ function Shell({ core }: { core: Core }) {
         {screen('uhadith', <RefBook cfg={REF_BOOKS.uhadith} />)}
         {screen('tafsir', <RefBook cfg={REF_BOOKS.tafsir} />)}
         {screen('ahadith', <Ahadith />)}
+        {screen('search', <SemanticSearch />)}
       </main>
       {sheet && (
         <div className="sheet" role="dialog" aria-modal="true" aria-label="گردان" onClick={(e) => { if (e.target === e.currentTarget) closeSheet(); }}>

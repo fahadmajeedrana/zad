@@ -1,13 +1,15 @@
 // One component for the four topic-summary screens: قواعد, کتاب الفقہ, اصول حدیث, اصول تفسیر (doc 02).
-import { useDeferredValue, useMemo, useRef, useState } from 'react';
+import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
 import { gnorm } from '../../core/text';
 import { onLoad } from '../../data/loader';
 import type { RefSection, RefTopic } from '../../data/types';
 import { useData } from '../../app/context';
+import { useRoute, type View } from '../../router';
 import { usePref } from '../../state/prefs';
 import { Empty, Hl, RichText, SearchField, SectionTitle } from '../../ui/controls';
 
 export interface RefBookConfig {
+  route: View;
   dataKey: 'guide' | 'fiqh' | 'uhadith' | 'tafsir';
   storeKey: string;
   defaultSection: string;
@@ -21,16 +23,16 @@ export interface RefBookConfig {
 }
 
 export const REF_BOOKS: Record<'qawaid' | 'fiqh' | 'uhadith' | 'tafsir', RefBookConfig> = {
-  qawaid: { dataKey: 'guide', storeKey: 'gBook', defaultSection: 's1', allLabel: 'تمام کتابیں', sectionLabel: 'کتاب',
+  qawaid: { route: 'qawaid', dataKey: 'guide', storeKey: 'gBook', defaultSection: 's1', allLabel: 'تمام کتابیں', sectionLabel: 'کتاب',
     shortLabel: (b) => b.n.split(' · ')[0].replace('کتاب ', '') + ' ' + '١٢٣'[+b.k[1] - 1],
     title: 'قواعد کا خلاصہ', subtitle: 'کتاب الصرف اور کتاب النحو، حصہ اول، دوم و سوم', searchPlaceholder: 'قاعدہ، اصطلاح یا مثال تلاش کریں', searchLabel: 'قواعد میں تلاش' },
-  fiqh: { dataKey: 'fiqh', storeKey: 'fBook', defaultSection: 'f1b1', allLabel: 'تمام ابواب', sectionLabel: 'باب',
+  fiqh: { route: 'fiqh', dataKey: 'fiqh', storeKey: 'fBook', defaultSection: 'f1b1', allLabel: 'تمام ابواب', sectionLabel: 'باب',
     shortLabel: (b) => b.n.split(':')[0].replace('حصہ ', ''),
     title: 'کتاب الفقہ', subtitle: 'حصہ اول (عبادات)، حصہ دوم (نکاح و طلاق)', searchPlaceholder: 'مسئلہ، اصطلاح یا حکم تلاش کریں', searchLabel: 'فقہ میں تلاش' },
-  uhadith: { dataKey: 'uhadith', storeKey: 'uBook', defaultSection: 'uhb1', allLabel: 'تمام ابواب', sectionLabel: 'باب',
+  uhadith: { route: 'uhadith', dataKey: 'uhadith', storeKey: 'uBook', defaultSection: 'uhb1', allLabel: 'تمام ابواب', sectionLabel: 'باب',
     shortLabel: (b) => b.n.split(':')[0],
     title: 'اصول حدیث', subtitle: 'حجیتِ حدیث، اصطلاحات، کتبِ حدیث اور اصول', searchPlaceholder: 'اصطلاح، کتاب یا اصول تلاش کریں', searchLabel: 'اصول حدیث میں تلاش' },
-  tafsir: { dataKey: 'tafsir', storeKey: 'tBook', defaultSection: 'utb1', allLabel: 'تمام حصے', sectionLabel: 'باب',
+  tafsir: { route: 'tafsir', dataKey: 'tafsir', storeKey: 'tBook', defaultSection: 'utb1', allLabel: 'تمام حصے', sectionLabel: 'باب',
     shortLabel: (b) => b.n.split('،')[0],
     title: 'اصول تفسیر', subtitle: 'قرآن، وحی، جمعِ قرآن، قراءات اور مآخذِ تفسیر', searchPlaceholder: 'اصطلاح، عنوان یا تفسیر تلاش کریں', searchLabel: 'اصول تفسیر میں تلاش' },
 };
@@ -62,6 +64,18 @@ function RefBookBody({ cfg, data }: { cfg: RefBookConfig; data: RefSection[] }) 
   const [q, setQ] = useState('');
   const qn = gnorm(useDeferredValue(q).trim()).trim();
   const listRef = useRef<HTMLDivElement>(null);
+
+  // Deep link from search results: ?t=<sectionKey>:<topicNo> selects that section and topic.
+  const { view, params } = useRoute();
+  const linkT = view === cfg.route ? params.get('t') : null;
+  useEffect(() => {
+    if (!linkT) return;
+    const s = linkT.split(':')[0];
+    if (!data.some((b) => b.k === s)) return;
+    setBook(s);
+    setTopic(linkT);
+    setQ('');
+  }, [linkT]);
 
   const sections = data.filter((b) => book === 'all' || b.k === book);
   const topic = topicSel !== 'all' && sections.some((b) => b.x.some((t) => `${b.k}:${t.n}` === topicSel)) ? topicSel : 'all';
