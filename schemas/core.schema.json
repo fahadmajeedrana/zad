@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "core.schema.json",
+  "title": "Core data (data/core.<hash>.json), v2",
+  "description": "Loaded at start-up. Built by scripts/build-content.mjs from content/core/. v2 replaces the pipe-delimited strings of the original app with arrays (same fields, same order); see docs/handoff/04-data-model.md for field meanings.",
+  "type": "object",
+  "required": ["masadir", "verbs", "vocab", "roots", "meanings", "lessonDates"],
+  "additionalProperties": false,
+  "$defs": {
+    "bab": { "enum": ["n", "d", "s", "f", "k", "h", "if", "tf", "mf", "ft", "nf", "tfl", "tfa", "st", "fl", "fy"] },
+    "book": { "enum": ["q1", "s1", "s2", "n1", "n2"] },
+    "text": { "type": "string", "minLength": 1 },
+    "count": { "type": ["integer", "null"], "minimum": 0 }
+  },
+  "properties": {
+    "masadir": {
+      "description": "[masdar, root, bab, urdu]",
+      "type": "array",
+      "items": { "type": "array", "prefixItems": [{ "$ref": "#/$defs/text" }, { "type": "string", "pattern": "^.{3}$" }, { "$ref": "#/$defs/bab" }, { "$ref": "#/$defs/text" }], "items": false, "minItems": 4 }
+    },
+    "verbs": {
+      "description": "[book, section, madi, mudari, amr, masdar, root, urdu, quranCount, bab]",
+      "type": "array",
+      "items": {
+        "type": "array",
+        "prefixItems": [
+          { "$ref": "#/$defs/book" }, { "type": "string" }, { "$ref": "#/$defs/text" }, { "$ref": "#/$defs/text" }, { "type": "string" },
+          { "$ref": "#/$defs/text" }, { "$ref": "#/$defs/text" }, { "$ref": "#/$defs/text" }, { "$ref": "#/$defs/count" },
+          { "anyOf": [{ "$ref": "#/$defs/bab" }, { "const": "" }] }
+        ],
+        "items": false,
+        "minItems": 10
+      }
+    },
+    "vocab": {
+      "description": "[book, topic, arabic, urdu, quranCount]",
+      "type": "array",
+      "items": { "type": "array", "prefixItems": [{ "$ref": "#/$defs/book" }, { "$ref": "#/$defs/text" }, { "$ref": "#/$defs/text" }, { "$ref": "#/$defs/text" }, { "$ref": "#/$defs/count" }], "items": false, "minItems": 5 }
+    },
+    "roots": {
+      "description": "[root, 'bab[.l|.m],…'] — Arramooz (GPL)",
+      "type": "array",
+      "items": { "type": "array", "prefixItems": [{ "type": "string", "pattern": "^.{3}$" }, { "type": "string", "pattern": "^(n|d|s|f|k|h|if|tf|mf|ft|nf|tfl|tfa|st|fl|fy)(\\.[lm])?(,(n|d|s|f|k|h|if|tf|mf|ft|nf|tfl|tfa|st|fl|fy)(\\.[lm])?)*$" }], "items": false, "minItems": 2 }
+    },
+    "meanings": {
+      "description": "[root, bab, urdu]",
+      "type": "array",
+      "items": { "type": "array", "prefixItems": [{ "$ref": "#/$defs/text" }, { "$ref": "#/$defs/bab" }, { "$ref": "#/$defs/text" }], "items": false, "minItems": 3 }
+    },
+    "lessonDates": { "type": "object", "additionalProperties": { "type": "string" } }
+  }
+}

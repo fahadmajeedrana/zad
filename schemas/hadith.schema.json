@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hadith.schema.json",
+  "title": "کتاب الحدیث (data/hadith.json)",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": [
+      "k",
+      "n",
+      "b"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "k": {
+        "type": "string",
+        "description": "h1 | h2 | h3"
+      },
+      "n": {
+        "type": "string"
+      },
+      "b": {
+        "type": "array",
+        "description": "ابواب",
+        "items": {
+          "type": "object",
+          "required": [
+            "t",
+            "k",
+            "h"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "t": {
+              "type": "string",
+              "description": "باب title; may contain ' — ' followed by an Urdu subtitle"
+            },
+            "k": {
+              "type": "string",
+              "description": "کتاب (chapter group) this باب belongs to; may be empty; may contain ' — '"
+            },
+            "h": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "n",
+                  "a",
+                  "s",
+                  "w",
+                  "u"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "n": {
+                    "type": "integer",
+                    "description": "hadith number within the part"
+                  },
+                  "a": {
+                    "type": "string",
+                    "description": "Arabic text with harakat"
+                  },
+                  "s": {
+                    "type": "string",
+                    "description": "source reference"
+                  },
+                  "w": {
+                    "type": "array",
+                    "description": "word-by-word glossary",
+                    "items": {
+                      "type": "array",
+                      "prefixItems": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ],
+                      "minItems": 2,
+                      "maxItems": 2,
+                      "items": false
+                    }
+                  },
+                  "u": {
+                    "type": "string",
+                    "description": "Urdu translation (بامحاورہ)"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

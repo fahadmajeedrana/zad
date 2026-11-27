@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ref-book.schema.json",
+  "title": "Topic-summary book (قواعد, فقہ, اصول حدیث, اصول تفسیر)",
+  "description": "Used by data/guide.json, data/fiqh.json, data/uhadith.json, data/tafsir.json. Array of sections (book part or باب).",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": [
+      "k",
+      "n",
+      "x"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "k": {
+        "type": "string",
+        "description": "stable section key, e.g. s1, n3, f1b2, uhb1, utb4"
+      },
+      "n": {
+        "type": "string",
+        "description": "section display name"
+      },
+      "x": {
+        "type": "array",
+        "description": "topics in book order",
+        "items": {
+          "type": "object",
+          "required": [
+            "t",
+            "p",
+            "i"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "t": {
+              "type": "string",
+              "description": "topic title"
+            },
+            "p": {
+              "type": "string",
+              "description": "book page(s), e.g. '11' or '29–30'; may be empty"
+            },
+            "i": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 3,
+                "prefixItems": [
+                  {
+                    "enum": [
+                      0,
+                      1
+                    ],
+                    "description": "indent level: 0 = item, 1 = sub-item"
+                  },
+                  {
+                    "type": "string",
+                    "description": "text (Urdu with inline Arabic)"
+                  },
+                  {
+                    "type": "integer",
+                    "description": "list number when the source item was numbered"
+                  }
+                ],
+                "items": false
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

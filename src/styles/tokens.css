@@ -1,0 +1,49 @@
+/* Design tokens (handoff design/tokens.json). Names follow the original app's CSS:
+   teal = primary, saffron = accent, slip = surface. Only the live "field-notebook" values. */
+:root {
+  --ink: #1c2a22;
+  --paper: #fff9e9;
+  --slip: #ffffff;
+  --rule: #e8dfc6;
+  --muted: #66706a;
+  --teal: #075b35;
+  --teal-soft: #e5f1e8;
+  --saffron: #8f6410;
+  --saffron-soft: #fbefcc;
+  --warn: #a33a1f;
+  --warn-soft: #fff6f2;
+  --gold: #e6b83f;
+  --deep: #034326;
+  --brand: #075b35;
+  --subtle: #fbfaf6;
+  --glass: rgba(255, 255, 255, .94);
+  --glass-b: #e8dfc6;
+  --shadow: 0 1px 2px rgba(20, 35, 25, .05), 0 6px 18px rgba(20, 35, 25, .07);
+  --header-bg: linear-gradient(135deg, #087a47, #034326);
+  --r: 14px;
+  --f-ar: "Amiri", "Noto Naskh Arabic", "Traditional Arabic", serif;
+  --f-ur: var(--f-ar);
+  --f-ui: var(--f-ar);
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --ink: #e5eae4;
+  --paper: #121814;
+  --slip: #1b231e;
+  --rule: #2d3a32;
+  --muted: #9aa69e;
+  --teal: #7cc59a;
+  --teal-soft: #17342a;
+  --saffron: #e6b83f;
+  --saffron-soft: #33291a;
+  --warn: #e07a5f;
+  --warn-soft: #2a1d18;
+  --brand: #0d6a40;
+  --subtle: #1b231e;
+  --glass: rgba(27, 35, 30, .92);
+  --glass-b: #2d3a32;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .3);
+  --header-bg: linear-gradient(135deg, #075b35, #022a18);
+  color-scheme: dark;
+}
