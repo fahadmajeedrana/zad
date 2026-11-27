@@ -1,7 +1,7 @@
 // Compare embedding models on real student-style questions with known answers.
 // Usage: node scripts/eval-search.mjs [model ...]     (models: see MODELS in lib/chunks.mjs)
 // Prints hit@1 / hit@5 / MRR per model and the top-3 results per question for review.
-import { MODELS, buildChunks, loadBuiltData, makeEmbedder } from './lib/chunks.mjs';
+import { MODELS, buildChunks, lexiconTexts, loadBuiltData, makeEmbedder } from './lib/chunks.mjs';
 
 // expect: topic keys ("fiqh f1b1:20") or a test on the hadith translation.
 const Q = [
@@ -38,14 +38,63 @@ const { data } = loadBuiltData();
 const chunks = buildChunks(data);
 console.log(`${chunks.length} chunks (${chunks.filter((c) => c.meta.d !== 'hadith').length} topic pieces, ${chunks.filter((c) => c.meta.d === 'hadith').length} ahadith)\n`);
 
-for (const name of process.argv.slice(2).length ? process.argv.slice(2) : Object.keys(MODELS)) {
+// Same questions as students might type them in Roman Urdu (same order as Q).
+const ROMAN = [
+  'wuzu kin cheezon se toot jata hai?', 'wuzu mein kitni cheezein farz hain?', 'namaz kis wajah se fasid ho jati hai?',
+  'zakat kin logon ko di ja sakti hai?', 'roze mein kya karne se sirf qaza lazim aati hai?', 'hajj kitni qisam ka hota hai?',
+  'nikah sahih hone ke liye gawah zaroori hain?', 'doodh pilane se kaun se rishte haram ho jate hain?', 'talaq sareeh kise kehte hain?',
+  'mutawatir hadees ki tareef kya hai?', 'zaeef aur mauzoo hadees mein kya farq hai?', 'kya Nabi ke zamane mein hadeesen likhi gayin?',
+  'Quran ko aik kitab ki shakal mein kis ne jama kiya?', 'Quran thora thora kyun nazil hua?', 'apni raye se tafseer karna kaisa hai?',
+  'makki aur madani surton ki pehchan kaise hoti hai?', 'lazim aur mutaddi fel mein kya farq hai?', 'mubtada aur khabar kya hote hain?',
+  'jama mukassar kise kehte hain?', 'marifa ki kitni qismein hain?', 'amaal ka daromadar niyyaton par hai',
+  'parosi ke huqooq ke bare mein hadees', 'sach bolne ki fazeelat', 'maa baap ke sath acha sulook',
+];
+
+// A second Roman set with different spellings and phrasings, never used for tuning.
+const HELDOUT = [
+  ['wazu tootne ki wajuhat', ['fiqh f1b1:20']], ['namaz ke mufsidaat', ['fiqh f1b2:11']], ['zakaat ke masarif', ['fiqh f1b3:8']],
+  ['roza kin cheezon se nahi tootta', ['fiqh f1b4:5']], ['hajj e tamattu ka tareeqa', ['fiqh f1b5:9']], ['nikah ke arkan', ['fiqh f2b1:3']],
+  ['talaq e kinaya', ['fiqh f2b3:6', 'fiqh f2b3:7']], ['hadis e qudsi kya hoti hai', ['uhadith uhb2:6']], ['sahih bukhari ka taaruf', ['uhadith uhb3:5']],
+  ['hazrat usman ne quran kaise jama kiya', ['tafsir utb3:3']], ['wahi ki iqsaam', ['tafsir utb2:1']], ['naskh ki hikmat', ['tafsir utb3:8']],
+  ['fail aur mafool', ['guide s1:11']], ['muannas ki alamat', ['guide n1:13']], ['ghusl ka tareeqa', ['fiqh f1b1:24']],
+  ['tayammum kaise karte hain', ['fiqh f1b1:26']],
+];
+
+// Flags: --roman  use the Roman Urdu questions
+//        --index  score the committed index (content/generated/semantic.json) instead of re-embedding
+const args = process.argv.slice(2);
+const roman = args.includes('--roman');
+const useIndex = args.includes('--index');
+//        --heldout  use the HELDOUT Roman set
+//        --translit convert Roman Urdu to Urdu script first (src/core/roman.js); --noterms skips its term list
+const translit = args.includes('--translit');
+let questions = args.includes('--heldout') ? HELDOUT : Q.map(([q, expect], i) => [roman ? ROMAN[i] : q, expect]);
+if (translit) {
+  const { buildLexicon, transliterate } = await import('../src/core/roman.js');
+  const lex = buildLexicon(lexiconTexts(data));
+  const terms = !args.includes('--noterms');
+  questions = questions.map(([q, e]) => [transliterate(lex, q, { terms }), e, q]);
+}
+const names = args.filter((a) => !a.startsWith('--'));
+
+async function passageVectors(name, E) {
+  if (!useIndex) return E.embedPassages(chunks.map((c) => c.text));
+  const fs = await import('node:fs');
+  const idx = JSON.parse(fs.readFileSync(new URL('../content/generated/semantic.json', import.meta.url), 'utf8'));
+  if (idx.model !== MODELS[name].id) throw new Error(`index was built with ${idx.model}, not ${MODELS[name].id}`);
+  if (idx.refs.length !== chunks.length) throw new Error('index is stale — run npm run embeddings');
+  const q = new Int8Array(Buffer.from(idx.vectors, 'base64').buffer.slice(0));
+  return chunks.map((_, i) => Array.from(q.subarray(i * idx.dims, (i + 1) * idx.dims), (x) => x / 127));
+}
+
+for (const name of names.length ? names : Object.keys(MODELS)) {
   const t0 = Date.now();
   const E = await makeEmbedder(name);
-  const P = await E.embedPassages(chunks.map((c) => c.text));
-  const QV = await E.embedQueries(Q.map((q) => q[0]));
+  const P = await passageVectors(name, E);
+  const QV = await E.embedQueries(questions.map((q) => q[0]));
   let h1 = 0, h5 = 0, mrr = 0;
   const lines = [];
-  Q.forEach(([q, expect], qi) => {
+  questions.forEach(([q, expect], qi) => {
     const scored = P.map((v, i) => [i, v.reduce((s, x, j) => s + x * QV[qi][j], 0)]).sort((a, b) => b[1] - a[1]);
     // rank by distinct topic (several chunks can come from one topic)
     const seen = [];
@@ -54,10 +103,10 @@ for (const name of process.argv.slice(2).length ? process.argv.slice(2) : Object
     if (rank === 1) h1++;
     if (rank >= 1 && rank <= 5) h5++;
     if (rank) mrr += 1 / rank;
-    lines.push(`  ${rank === 1 ? '✓' : rank && rank <= 5 ? '~' : '✗'} [${rank || '>20'}] ${q}\n      ${seen.slice(0, 3).map((s) => s.c.label.slice(0, 70)).join('\n      ')}`);
+    lines.push(`  ${rank === 1 ? '✓' : rank && rank <= 5 ? '~' : '✗'} [${rank || '>20'}] ${q}${questions[qi][2] ? '   ← ' + questions[qi][2] : ''}\n      ${seen.slice(0, 3).map((s) => s.c.label.slice(0, 70)).join('\n      ')}`);
   });
   console.log(`== ${name} (${MODELS[name].id}, ${MODELS[name].dtype}) — ${((Date.now() - t0) / 1000).toFixed(0)}s`);
-  console.log(`   hit@1 ${h1}/${Q.length}   hit@5 ${h5}/${Q.length}   MRR ${(mrr / Q.length).toFixed(2)}`);
+  console.log(`   hit@1 ${h1}/${questions.length}   hit@5 ${h5}/${questions.length}   MRR ${(mrr / questions.length).toFixed(2)}${roman || args.includes("--heldout") ? "   (Roman" + (args.includes("--heldout") ? ", held-out" : "") + (translit ? ", transliterated" + (args.includes("--noterms") ? ", no term list" : "") : "") + ")" : ""}`);
   if (process.env.VERBOSE) console.log(lines.join('\n'));
   console.log();
 }

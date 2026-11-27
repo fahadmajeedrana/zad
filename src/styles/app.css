@@ -345,3 +345,5 @@ article.sem-topic { background: var(--slip); border: 1px solid var(--rule); bord
 .sem-more { list-style: none; color: var(--muted); }
 .sem-kinds { max-width: 100%; overflow-x: auto; scrollbar-width: none; }
 .sem-kinds button { white-space: nowrap; flex: none; }
+.sem-understood b { font-family: var(--f-ur); font-size: 17px; color: var(--teal); }
+.sem-examples button[dir="ltr"], .sem-examples button:last-child { font-family: system-ui, sans-serif; direction: ltr; }

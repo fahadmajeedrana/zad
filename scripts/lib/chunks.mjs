@@ -9,6 +9,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { stripHarakat } from '../../src/core/sarf/engine.js';
+import { lexiconTexts as romanLexiconTexts } from '../../src/core/roman.js';
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const MAX = 600;
@@ -84,3 +85,7 @@ export async function makeEmbedder(name) {
   };
   return { model: m, embedQueries: (t) => embed(t, m.query), embedPassages: (t, p) => embed(t, m.passage, p) };
 }
+
+
+/** Urdu text the Roman-Urdu matcher learns its vocabulary from (same as the app). */
+export const lexiconTexts = (data) => romanLexiconTexts(REF_KEYS.map((k) => data[k]), data.hadith);

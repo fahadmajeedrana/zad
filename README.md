@@ -51,7 +51,19 @@ To add a new topic-summary book (e.g. اصول فقہ):
 - **In the browser:** a Web Worker runs the same model with transformers.js and ranks passages by dot product. Searches take about 50–200 ms.
 - **Download:** the model (~118 MB) is fetched from the Hugging Face hub only after the student taps a button. It's then cached, so search works offline afterwards. The vectors and the worker are also cached on first use; they aren't part of the app install.
 - **Keeping it current:** after editing content, run `npm run embeddings`. `npm run content` warns when the vectors are stale.
-- **Measuring quality:** `npm run eval:search [model…]` scores models on 24 student-style questions with known answers. Results: e5-small puts the correct answer first for 19/24 questions and in the top 5 for all 24; paraphrase-multilingual-MiniLM gets 6/24 first and 15/24 in the top 5.
+- **Roman Urdu** ("wuzu kin cheezon se toot jata hai?") works too. The model only understands Urdu script, so `src/core/roman.js` first converts each Roman word to the closest-sounding word from the books' own vocabulary:
+  - short grammar words (kya, hai, mein, ki…) come from a fixed list;
+  - a short list of subject terms with common Roman spellings is checked next;
+  - the page shows the student the Urdu it understood, so a wrong guess is visible.
+- **Measuring quality:** `npm run eval:search -- [model] [--index] [--roman|--heldout] [--translit] [--noterms]` scores search on student-style questions with known answers. `--index` uses the committed vectors (exactly what the app ships).
+
+| Questions | Correct answer first | In top 5 |
+|---|---|---|
+| Urdu script (24) | 21 | 24 |
+| Roman Urdu (same 24), converted, no term list | 20 | 24 |
+| Roman Urdu held-out set (16, never tuned on), converted, no term list | 11 | 15 |
+| Roman Urdu without conversion | 0 | 0 |
+| (paraphrase-multilingual-MiniLM instead of e5-small, Urdu) | 6 | 15 |
 
 ## Deploy (GitHub Pages)
 

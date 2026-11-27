@@ -7,13 +7,14 @@ import type { HadithPart, RefSection } from '../../data/types';
 import { navigate, type View } from '../../router';
 import { usePref } from '../../state/prefs';
 import { Empty, RichText, SayButton, SectionTitle } from '../../ui/controls';
+import { buildLexicon, hasLatin, lexiconTexts, transliterate, type LexEntry } from '../../core/roman';
 import { decodeIndex, embedQuery, loadModel, onModelProgress, rank, type Hit, type RefKey, type SemanticIndex } from './semantic';
 
 const KINDS: [string, string, string[] | null][] = [
   ['all', 'سب', null], ['fiqh', 'فقہ', ['fiqh']], ['hadith', 'احادیث', ['hadith']], ['uhadith', 'اصول حدیث', ['uhadith']],
   ['tafsir', 'اصول تفسیر', ['tafsir']], ['guide', 'قواعد', ['guide']],
 ];
-const EXAMPLES = ['وضو کن چیزوں سے ٹوٹ جاتا ہے؟', 'زکوٰۃ کن لوگوں کو دی جا سکتی ہے؟', 'قرآن کو ایک کتاب کی شکل میں کس نے جمع کیا؟', 'ضعیف اور موضوع حدیث میں فرق', 'ماں باپ کے ساتھ اچھا سلوک', 'لازم اور متعدی فعل میں فرق'];
+const EXAMPLES = ['وضو کن چیزوں سے ٹوٹ جاتا ہے؟', 'زکوٰۃ کن لوگوں کو دی جا سکتی ہے؟', 'قرآن کو ایک کتاب کی شکل میں کس نے جمع کیا؟', 'ضعیف اور موضوع حدیث میں فرق', 'ماں باپ کے ساتھ اچھا سلوک', 'لازم اور متعدی فعل میں فرق', 'wuzu kin cheezon se toot jata hai?'];
 const VIEW_OF: Record<RefKey, View> = { guide: 'qawaid', fiqh: 'fiqh', uhadith: 'uhadith', tafsir: 'tafsir' };
 const BOOK_NAME: Record<RefKey, string> = { guide: 'قواعد', fiqh: 'کتاب الفقہ', uhadith: 'اصول حدیث', tafsir: 'اصول تفسیر' };
 
@@ -23,6 +24,12 @@ type ModelState = 'unknown' | 'loading' | 'ready' | 'error';
 let indexPromise: Promise<SemanticIndex> | null = null;
 const getIndex = () => (indexPromise ??= loadData('semantic').then(decodeIndex).catch((e) => { indexPromise = null; throw e; }));
 
+// Roman Urdu support: vocabulary learned from the books themselves (built once, ~100 ms).
+let lexPromise: Promise<LexEntry[]> | null = null;
+const getLexicon = () => (lexPromise ??= Promise.all([loadData('guide'), loadData('fiqh'), loadData('uhadith'), loadData('tafsir'), loadData('hadith')])
+  .then(([g, f, u, t, h]) => buildLexicon(lexiconTexts([g, f, u, t], h)))
+  .catch((e) => { lexPromise = null; throw e; }));
+
 export function SemanticSearch() {
   const [modelOk, setModelOk] = usePref('semModel', false);
   const [model, setModel] = useState<ModelState>('unknown');
@@ -31,6 +38,7 @@ export function SemanticSearch() {
   const [kind, setKind] = useState('all');
   const [hits, setHits] = useState<Hit[] | null>(null);
   const [asked, setAsked] = useState('');
+  const [understood, setUnderstood] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [books, setBooks] = useState<Books>({});
@@ -69,7 +77,10 @@ export function SemanticSearch() {
     try {
       const t0 = performance.now();
       const idx = await getIndex();
-      const qv = await embedQuery(idx, query);
+      // Roman Urdu → Urdu script (the model only understands Urdu script).
+      const urdu = hasLatin(query) ? transliterate(await getLexicon(), query) : query;
+      setUnderstood(urdu !== query ? urdu : '');
+      const qv = await embedQuery(idx, urdu);
       const k = KINDS.find((x) => x[0] === kind)![2];
       const found = rank(idx, qv, k ? new Set(k) : null, 10);
       // Load the books the results come from (precached, so this is instant offline).
@@ -120,7 +131,7 @@ export function SemanticSearch() {
 
       <div className="maker">
         <div className="row">
-          <input className="sem-input" dir="rtl" placeholder="مثلاً: وضو کن چیزوں سے ٹوٹ جاتا ہے؟" autoComplete="off" aria-label="سوال" value={q}
+          <input className="sem-input" dir="auto" placeholder="مثلاً: وضو کن چیزوں سے ٹوٹ جاتا ہے؟ یا wuzu kin cheezon se toot jata hai" autoComplete="off" aria-label="سوال" value={q}
             onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') search(q); }} disabled={model !== 'ready'} />
           <button type="button" className="btn accent" onClick={() => search(q)} disabled={model !== 'ready' || busy}>{busy ? '…' : 'تلاش'}</button>
         </div>
@@ -136,6 +147,7 @@ export function SemanticSearch() {
         </div>
       </div>
 
+      {understood && hits && <div className="note sem-understood">رومن اردو سے: <b>{understood}</b> <span className="muted">(غلط ہو تو اردو میں لکھیں)</span></div>}
       {error && <div className="warn">{error}</div>}
       {hits && hits.length === 0 && <Empty>کچھ نہیں ملا۔</Empty>}
       {hits && hits.length > 0 && (
