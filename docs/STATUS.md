@@ -8,10 +8,11 @@ Last updated: **2026-11-28**. Update this file at the end of each working sessio
 |---|---|
 | v1 → v2 rebuild | **Done** on branch `v2`. Parity with handoff doc 10; the engine passes all vectors; all data files are byte-identical to v1 (core now uses arrays). Checked in a browser: every screen, dark mode, offline, `#hash` redirects. |
 | GitHub Pages setup | **Done in code**: `.github/workflows/pages.yml`, base `/zad/`, `404.html` for deep links, v1 caches cleaned up. **Not live yet** (see "Waiting on the owner"). |
-| Semantic search (`/search`) | **Done** on branch `semantic-search`, on top of `v2`. Experimental and not in the menu. In-browser e5-small, opt-in ~118 MB model download, works offline afterwards. |
+| Semantic search (`/search`) | **Done** on branch `semantic-search`, on top of `v2`. Experimental. Opened from the search icon in the header; `?q=` links work. In-browser e5-small, opt-in ~118 MB model download, works offline afterwards. |
+| Cited answer ("کتابوں سے جواب") | **Done** on `semantic-search`. Picks the 2–3 best sentences from the top passages, word for word, each with a citation that links to the highlighted passage. No AI-written text. |
 | Roman Urdu search | **Done** on `semantic-search`. Converts Roman Urdu to Urdu via the books' vocabulary and shows the student what it understood. |
 | AI-written answers | **Not started.** Design in ARCHITECTURE §3 "Current direction". |
-| Tests | 82 passing (`npm test`). |
+| Tests | 82 passing, plus 1 opt-in model check (`ANSWER_EVAL=1`); run with `npm test`. |
 
 ## Waiting on the owner
 
@@ -22,7 +23,7 @@ Last updated: **2026-11-28**. Update this file at the end of each working sessio
    1. Open a PR from `v2` to `main`.
    2. In repo **Settings → Pages**, set the source to **GitHub Actions**.
    3. Merge the PR.
-3. **Try `/zad/search`** with real student questions, then decide whether to merge `semantic-search` and whether to add it to the menu or Home.
+3. **Try the header search** with real student questions (Urdu and Roman Urdu), then decide whether to merge `semantic-search`.
 
 ## Open decisions (ask the owner; don't assume)
 
@@ -40,7 +41,6 @@ Last updated: **2026-11-28**. Update this file at the end of each working sessio
 1. Go live with `v2` (above).
 2. Smaller follow-ups:
    - a Gboard Urdu-transliteration hint on the search page;
-   - a search entry point in the UI;
    - shrinking the 118 MB model by pruning unused vocabulary rows from the embedding matrix (most of its size).
 3. AI answers via the small server, with sign-in and quotas. Send it the question plus the top passages; it writes the answer with citations.
 4. Ingest full books: `books/<book>/<part>.md` in the same heading format, then rerun embeddings and the eval.
@@ -48,6 +48,7 @@ Last updated: **2026-11-28**. Update this file at the end of each working sessio
 ## Known issues and limits
 
 - The search model is a ~118 MB one-time download, which is heavy on mobile data. That's why the download is opt-in.
+- Search, and so the cited answer, is weak with negation: "روزہ کن چیزوں سے ٹوٹتا ہے" also pulls in "…روزہ نہیں ٹوٹتا". The page tells students to read the full passage and to ask their teacher about rulings.
 - Roman Urdu can't separate words that sound and are spelled alike (وحی vs وہی). Some are fixed in `TERMS`; the page shows what it understood.
 - Content needing a teacher's check: the date for سبق 6 in `content/core/lesson-dates.json` says 15 نومبر, between the 17th and 19th (probably 18 نومبر).
 - Engine quirks kept on purpose (handoff doc 10 §D):

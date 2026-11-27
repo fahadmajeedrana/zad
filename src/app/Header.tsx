@@ -16,7 +16,7 @@ addEventListener('beforeinstallprompt', (e) => {
   installListeners.forEach((fn) => fn());
 });
 
-export function Header({ onHome }: { onHome?: () => void }) {
+export function Header({ onHome, onSearch }: { onHome?: () => void; onSearch?: () => void }) {
   const [theme, setTheme] = usePref<'light' | 'dark' | null>('theme', null);
   const [canInstall, setCanInstall] = useState(!!deferred);
   useEffect(() => {
@@ -44,6 +44,11 @@ export function Header({ onHome }: { onHome?: () => void }) {
         <div><h1>زادُ الطالب</h1><p className="sub">طالب علم کا زادِ راہ</p></div>
       </div>
       {canInstall && <button type="button" className="install" onClick={install}>انسٹال کریں</button>}
+      {onSearch && (
+        <button type="button" className="hbtn" aria-label="کتابوں میں تلاش" title="کتابوں میں تلاش" onClick={onSearch}>
+          <Icon name="search" size={20} />
+        </button>
+      )}
       <button type="button" className="hbtn" aria-label="تھیم بدلیں" title="تھیم بدلیں" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
         <Icon name="moon" size={20} />
       </button>

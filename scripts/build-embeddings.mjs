@@ -30,6 +30,7 @@ const out = {
   model: MODELS[NAME].id,
   dtype: MODELS[NAME].dtype,
   queryPrefix: MODELS[NAME].query,
+  passagePrefix: MODELS[NAME].passage,
   pooling: MODELS[NAME].pooling,
   dims,
   // The data files these chunks were built from; build-content warns if they change.

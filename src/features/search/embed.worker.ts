@@ -5,12 +5,12 @@ import { env, pipeline, type FeatureExtractionPipeline } from '@huggingface/tran
 
 env.allowLocalModels = false;
 
-type Msg = { id: number; type: 'load' | 'embed'; model: string; dtype: string; pooling: 'mean' | 'cls'; text?: string };
+type Msg = { id: number; type: 'load' | 'embed' | 'embedMany'; model: string; dtype: string; pooling: 'mean' | 'cls'; text?: string; texts?: string[] };
 
 let ext: Promise<FeatureExtractionPipeline> | null = null;
 
 self.onmessage = async (e: MessageEvent<Msg>) => {
-  const { id, type, model, dtype, pooling, text } = e.data;
+  const { id, type, model, dtype, pooling, text, texts } = e.data;
   try {
     ext ??= pipeline('feature-extraction', model, {
       dtype: dtype as 'q8',
@@ -19,6 +19,16 @@ self.onmessage = async (e: MessageEvent<Msg>) => {
     }) as Promise<FeatureExtractionPipeline>;
     const fx = await ext;
     if (type === 'load') { self.postMessage({ id, type: 'ready' }); return; }
+    if (type === 'embedMany') {
+      // Sentences for the cited answer: embedded in small batches to keep memory low on phones.
+      const vecs: number[][] = [];
+      for (let i = 0; i < texts!.length; i += 8) {
+        const out = await fx(texts!.slice(i, i + 8), { pooling, normalize: true });
+        vecs.push(...(out.tolist() as number[][]));
+      }
+      self.postMessage({ id, type: 'result', vecs });
+      return;
+    }
     const out = await fx(text!, { pooling, normalize: true });
     self.postMessage({ id, type: 'result', vec: Array.from(out.data as Float32Array) });
   } catch (err) {

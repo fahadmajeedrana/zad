@@ -9,6 +9,7 @@ export interface SemanticRaw {
   model: string;
   dtype: string;
   queryPrefix: string;
+  passagePrefix?: string;
   pooling: 'mean' | 'cls';
   dims: number;
   sources: Record<string, string>;
@@ -57,7 +58,7 @@ export function rank(idx: SemanticIndex, q: ArrayLike<number>, kinds: Set<string
 type Progress = { status?: string; file?: string; loaded?: number; total?: number };
 let worker: Worker | null = null;
 let nextId = 1;
-const pending = new Map<number, { resolve: (v: number[] | null) => void; reject: (e: Error) => void }>();
+const pending = new Map<number, { resolve: (v: unknown) => void; reject: (e: Error) => void }>();
 const progressListeners = new Set<(p: Progress) => void>();
 
 function getWorker() {
@@ -70,22 +71,25 @@ function getWorker() {
       if (!p) return;
       pending.delete(m.id);
       if (m.type === 'error') p.reject(new Error(m.message));
-      else p.resolve(m.type === 'result' ? m.vec : null);
+      else p.resolve(m.type === 'result' ? (m.vecs ?? m.vec) : null);
     };
   }
   return worker;
 }
 
-function call(idx: SemanticIndex, type: 'load' | 'embed', text?: string) {
+function call<T>(idx: SemanticIndex, type: 'load' | 'embed' | 'embedMany', payload: { text?: string; texts?: string[] } = {}) {
   const id = nextId++;
-  return new Promise<number[] | null>((resolve, reject) => {
-    pending.set(id, { resolve, reject });
-    getWorker().postMessage({ id, type, model: idx.model, dtype: idx.dtype, pooling: idx.pooling, text });
+  return new Promise<T>((resolve, reject) => {
+    pending.set(id, { resolve: resolve as (v: unknown) => void, reject });
+    getWorker().postMessage({ id, type, model: idx.model, dtype: idx.dtype, pooling: idx.pooling, ...payload });
   });
 }
 
-export const loadModel = (idx: SemanticIndex) => call(idx, 'load');
-export const embedQuery = async (idx: SemanticIndex, q: string) => (await call(idx, 'embed', idx.queryPrefix + q))!;
+export const loadModel = (idx: SemanticIndex) => call<null>(idx, 'load');
+export const embedQuery = (idx: SemanticIndex, q: string) => call<number[]>(idx, 'embed', { text: idx.queryPrefix + q });
+/** Embed passages/sentences (with the model's passage prefix), e.g. for the cited answer. */
+export const embedPassages = (idx: SemanticIndex, texts: string[]) =>
+  call<number[][]>(idx, 'embedMany', { texts: texts.map((t) => (idx.passagePrefix ?? idx.queryPrefix.replace('query', 'passage')) + t) });
 export function onModelProgress(fn: (p: Progress) => void) {
   progressListeners.add(fn);
   return () => { progressListeners.delete(fn); };

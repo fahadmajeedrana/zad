@@ -347,3 +347,15 @@ article.sem-topic { background: var(--slip); border: 1px solid var(--rule); bord
 .sem-kinds button { white-space: nowrap; flex: none; }
 .sem-understood b { font-family: var(--f-ur); font-size: 17px; color: var(--teal); }
 .sem-examples button[dir="ltr"], .sem-examples button:last-child { font-family: system-ui, sans-serif; direction: ltr; }
+.sem-answer { background: var(--slip); border: 1px solid var(--teal); border-inline-start: 4px solid var(--teal); border-radius: 12px; padding: 10px 16px 12px; box-shadow: var(--shadow); }
+.sem-answer h3 { margin: 0 0 6px; font-size: 18px; color: var(--teal); }
+.sem-answer h3 small { font-size: 12.5px; font-weight: 400; color: var(--muted); margin-inline-start: 6px; }
+.sem-answer ol { margin: 0; padding-inline-start: 22px; display: grid; gap: 8px; }
+.sem-answer li { font-size: 16px; line-height: 2; }
+.sem-answer li::marker { color: var(--teal); font-weight: 700; }
+.sem-answer .ex { font-family: var(--f-ar); font-size: 1.12em; color: var(--teal); font-weight: 700; }
+.sem-cite { display: inline-block; font-size: 12.5px; line-height: 1.6; color: var(--teal); background: var(--saffron-soft); border-radius: 999px; padding: 0 9px; text-decoration: none; }
+.sem-cite:hover { text-decoration: underline; }
+.sem-answer .note { margin-top: 8px; font-size: 12.5px; }
+.sem-results .sem-hit { background: var(--saffron-soft); border-radius: 6px; box-shadow: 0 0 0 4px var(--saffron-soft); }
+.sem-card { scroll-margin-top: 150px; }

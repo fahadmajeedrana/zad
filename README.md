@@ -45,7 +45,19 @@ To add a new topic-summary book (e.g. اصول فقہ):
 
 ## تلاش بالمعنی (semantic search, experimental)
 
-`/zad/search` (not linked from the menu yet) lets students ask in their own words. It returns the books' own passages with references; it does not write answers. Everything runs in the browser:
+Students open it with the **search icon in the header**, available on every screen. They can also use a link: `/zad/search?q=<question>` runs the question directly.
+
+They ask in their own words and get the books' own passages, with references. Nothing is written by an AI model.
+
+Above the passages, a **"کتابوں سے جواب"** box shows the 2–3 sentences that best answer the question, quoted word for word from the top passages (`src/features/search/answer.ts`). Each sentence:
+- carries a citation (book › topic, page; or part › باب, hadith number);
+- links to its passage below, where the quoted item is highlighted.
+
+To check the answer quality: `ANSWER_EVAL=1 npx vitest run tests/answer.eval.test.ts --silent=false` prints the picked sentences for sample questions.
+
+**Known weakness:** negation. For "روزہ کن چیزوں سے ٹوٹتا ہے" the search tends to rank the topic "جن چیزوں سے روزہ نہیں ٹوٹتا" too. The page asks students to read the full passage and to ask their teacher about rulings.
+
+Everything runs in the browser:
 
 - **Passage data:** the books are split into 2,166 passages (long topics in ~600-character pieces, plus every hadith). `npm run embeddings` converts each one into a vector with `Xenova/multilingual-e5-small`. The result is stored as int8 vectors in `content/generated/semantic.json` (1.1 MB), which is committed, so CI never needs the model.
 - **In the browser:** a Web Worker runs the same model with transformers.js and ranks passages by dot product. Searches take about 50–200 ms.

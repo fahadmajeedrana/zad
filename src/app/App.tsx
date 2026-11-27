@@ -89,7 +89,7 @@ function Shell({ core }: { core: Core }) {
 
   return (
     <SheetCtx.Provider value={openSheet}>
-      <Header onHome={() => navigate('home')} />
+      <Header onHome={() => navigate('home')} onSearch={() => navigate('search')} />
       <Dock view={view} />
       <main>
         {screen('home', <Home />)}

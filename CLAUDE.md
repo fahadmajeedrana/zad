@@ -72,6 +72,8 @@ docs/                 ARCHITECTURE.md, STATUS.md, handoff/ (original spec)
 
 - **Chunking** is in `scripts/lib/chunks.mjs`. Topics are split into ~600-character pieces prefixed with "section — title". Each hadith is one passage: باب + Urdu translation + Arabic (harakat stripped).
 - **Model:** `Xenova/multilingual-e5-small`, q8, with "query: " / "passage: " prefixes. It was picked by measurement (README table). If you change the model, rerun both `embeddings` and `eval:search` and update the README numbers.
+- **Entry point:** the search icon in the header (`Header onSearch`) → `/search`. `?q=` runs a question once the model is ready.
+- **Cited answer:** `src/features/search/answer.ts`. It collects sentence-sized units from the top 4 passages, embeds them in the worker (`embedPassages`, with the passage prefix from `semantic.json`), and keeps the best ≤3 within 0.03 of the top score, with a small penalty for lower-ranked passages. It never generates text. Check it with `ANSWER_EVAL=1 npx vitest run tests/answer.eval.test.ts --silent=false`.
 - **Roman Urdu:** `src/core/roman.js` (plain JS so Node scripts can import it). Its parts:
   - `FIXED`: grammar words;
   - `TERMS`: subject terms;
