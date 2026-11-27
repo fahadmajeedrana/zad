@@ -3,14 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#2f5d3a">
+<meta name="theme-color" content="#075b35">
 <meta name="color-scheme" content="light">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="description" content="زاد الطالب — صفوۃ المصادر، گردانیں، ذخیرہ الفاظ اور صرف و نحو کے قواعد">
 <title>زاد الطالب</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -247,30 +248,32 @@ select.sel { border: 1px solid var(--rule); background: var(--slip); border-radi
 
 /* ===== Field-notebook theme (parchment + forest green), modernised ===== */
 :root {
-  --ink: #1f2a24; --paper: #f4f1ea; --slip: #ffffff; --rule: #d8d4c8; --muted: #66706a;
-  --teal: #2f5d3a; --teal-soft: #e8efe3; --saffron: #9a6516; --saffron-soft: #f4ead6; --warn: #a33a1f;
-  --glass: rgba(255,255,255,.92); --glass-b: #d8d4c8;
+  --ink: #1c2a22; --paper: #fff9e9; --slip: #ffffff; --rule: #e8dfc6; --muted: #66706a;
+  --teal: #075b35; --teal-soft: #e5f1e8; --saffron: #8f6410; --saffron-soft: #fbefcc; --warn: #a33a1f;
+  --gold: #e6b83f; --deep: #034326; --brand: #075b35;
+  --glass: rgba(255,255,255,.94); --glass-b: #e8dfc6;
   --shadow: 0 1px 2px rgba(20,35,25,.05), 0 6px 18px rgba(20,35,25,.07);
   --r: 14px;
 }
 @media (prefers-color-scheme: dark) { :root[data-theme="auto-dark"] {
   --ink: #e5eae4; --paper: #121814; --slip: #1b231e; --rule: #2d3a32; --muted: #9aa69e;
-  --teal: #86b893; --teal-soft: #213328; --saffron: #d6a55a; --saffron-soft: #33291a; --warn: #e07a5f;
+  --teal: #7cc59a; --teal-soft: #17342a; --saffron: #e6b83f; --brand: #0d6a40; --saffron-soft: #33291a; --warn: #e07a5f;
   --glass: rgba(27,35,30,.92); --glass-b: #2d3a32; --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.3); } }
 :root[data-theme="dark"] {
   --ink: #e5eae4; --paper: #121814; --slip: #1b231e; --rule: #2d3a32; --muted: #9aa69e;
-  --teal: #86b893; --teal-soft: #213328; --saffron: #d6a55a; --saffron-soft: #33291a; --warn: #e07a5f;
+  --teal: #7cc59a; --teal-soft: #17342a; --saffron: #e6b83f; --brand: #0d6a40; --saffron-soft: #33291a; --warn: #e07a5f;
   --glass: rgba(27,35,30,.92); --glass-b: #2d3a32; --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.3); }
 
 /* green header bar */
-header.top { background: #2f5d3a; color: #fff; border-bottom: 0; backdrop-filter: none; -webkit-backdrop-filter: none;
+header.top { background: linear-gradient(135deg, #087a47, #034326); box-shadow: inset 0 -3px 0 var(--gold, #e6b83f); color: #fff; border-bottom: 0; backdrop-filter: none; -webkit-backdrop-filter: none;
   padding-top: calc(14px + env(safe-area-inset-top)); padding-bottom: 14px; box-shadow: 0 2px 12px rgba(20,35,25,.18); }
-:root[data-theme="dark"] header.top { background: #1f3d27; }
-@media (prefers-color-scheme: dark) { :root[data-theme="auto-dark"] header.top { background: #1f3d27; } }
+:root[data-theme="dark"] header.top { background: linear-gradient(135deg, #075b35, #022a18); }
+@media (prefers-color-scheme: dark) { :root[data-theme="auto-dark"] header.top { background: linear-gradient(135deg, #075b35, #022a18); } }
 .brand h1 { font-size: 22px; color: #fff; }
 .brand .sub { margin: 2px 0 0; font-size: 12.5px; opacity: .85; }
-.mark { background: rgba(255,255,255,.14); color: #fff; border: 1px solid rgba(255,255,255,.25); width: 40px; height: 40px; font-size: 24px; border-radius: 12px; }
-.install { background: #fff; color: #2f5d3a; border-radius: 8px; }
+.mark { background: rgba(0,0,0,.12); border: 1px solid rgba(230,184,63,.45); width: 42px; height: 42px; border-radius: 12px; padding: 3px; }
+.mark svg { width: 100%; height: 100%; display: block; }
+.install { background: #fff; color: #075b35; border-radius: 8px; }
 
 /* section headings */
 h2.sec { margin: 0; font-size: 17px; font-weight: 600; color: var(--teal); border-bottom: 2px solid var(--teal); padding-bottom: 6px; }
@@ -334,7 +337,7 @@ nav.dock .ico svg { width: 22px; height: 22px; }
 nav.dock .lbl { font-size: 11px; }
 nav.dock button:hover { background: var(--teal-soft); }
 nav.dock button:active { background: var(--teal-soft); }
-nav.dock button[aria-selected="true"] { background: var(--teal); color: #fff; }
+nav.dock button[aria-selected="true"] { background: var(--brand); color: #fff; }
 nav.dock button[aria-selected="true"] .ico { background: none; color: #fff; }
 nav.dock button[aria-selected="true"] .lbl { color: #fff; }
 nav.dock .dsep { display: none; }
@@ -443,7 +446,7 @@ nav.dock button[hidden] { display: none; }
 .subj .secs { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2px; }
 .subj .sec-l > span:not(.n) { flex: 1; min-width: 0; }
 .subj { background: var(--slip); border: 1px solid var(--rule); border-radius: 16px; box-shadow: var(--shadow); overflow: hidden; display: flex; flex-direction: column; }
-.subj .sh { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--teal); color: #fff; }
+.subj .sh { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: linear-gradient(135deg, var(--brand), var(--deep, #034326)); color: #fff; box-shadow: inset 0 -2px 0 var(--gold, #e6b83f); }
 .subj .sh .si { width: 42px; height: 42px; border-radius: 12px; background: rgba(255,255,255,.16); display: grid; place-items: center; flex: none; }
 .subj .sh .si svg { width: 22px; height: 22px; }
 .subj .sh h3 { margin: 0; font-size: 21px; font-weight: 700; line-height: 1.4; }
@@ -460,6 +463,10 @@ nav.dock button[hidden] { display: none; }
 .subj.soon .sh { background: var(--slip); color: var(--ink); }
 .subj.soon .sh .si { background: var(--teal-soft); color: var(--teal); }
 .subj.soon .sh p { color: var(--muted); }
+.subj .sec-l.soon { cursor: default; opacity: .75; }
+.subj .sec-l.soon:hover { background: none; }
+.subj .sec-l.soon::after { content: none; }
+.subj .sec-l.soon .badge { flex: none; }
 .subj .badge { margin-inline-start: auto; font-size: 12px; background: var(--saffron-soft); color: var(--ink); border-radius: 999px; padding: 2px 10px; white-space: nowrap; }
 .subj .plan { padding: 12px 16px 14px; color: var(--muted); font-size: 14px; line-height: 1.9; }
 /* ahadith */
@@ -489,19 +496,19 @@ nav.dock button[hidden] { display: none; }
 </head>
 <body>
 <header class="top">
-  <div class="brand" id="brandHome" role="link" tabindex="0" title="ہوم"><div class="mark" aria-hidden="true">ز</div><div><h1>زادُ الطالب</h1><p class="sub">طالب علم کا زادِ راہ</p></div></div>
+  <div class="brand" id="brandHome" role="link" tabindex="0" title="ہوم"><div class="mark" aria-hidden="true"><svg viewBox="40 20 432 470"><path d="M105 360V210c0-72 58-113 151-178 93 65 151 106 151 178v150" fill="none" stroke="#E6B83F" stroke-width="15" stroke-linecap="round"/><path transform="translate(256 176)" d="M28 11a48 48 0 1 1-53-53 39 39 0 0 0 53 53Z" fill="#FFF9E9"/><path d="M65 365Q164 322 256 391Q348 322 447 365L466 425Q354 390 256 472Q158 390 46 425Z" fill="#FFF9E9"/><path d="M256 391v81M65 365Q164 344 256 391Q348 344 447 365M46 427Q158 400 256 480Q354 400 466 427" fill="none" stroke="#E6B83F" stroke-width="9" stroke-linecap="round"/></svg></div><div><h1>زادُ الطالب</h1><p class="sub">طالب علم کا زادِ راہ</p></div></div>
   <button class="install" id="installBtn" hidden>انسٹال کریں</button>
   <button class="hbtn" id="dockTheme" aria-label="تھیم بدلیں" title="تھیم بدلیں"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
 </header>
 
 <nav class="dock" role="tablist" aria-label="مینو">
-  <button role="tab" data-view="home" aria-selected="false" id="tab-home"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg></span><span class="lbl">ہوم</span></button>
+  <button role="tab" data-view="home" aria-selected="false" id="tab-home"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1Z"/></svg></span><span class="lbl">ہوم</span></button>
   <span class="dsep" aria-hidden="true"></span>
-  <button role="tab" data-view="masadir" data-sub="arabi" aria-selected="true" id="tab-masadir"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg></span><span class="lbl">مصادر</span></button>
+  <button role="tab" data-view="masadir" data-sub="arabi" aria-selected="true" id="tab-masadir"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span><span class="lbl">مصادر</span></button>
   <button role="tab" data-view="study" data-sub="arabi" aria-selected="false" id="tab-study"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3" width="13" height="16" rx="2.5"/><path d="M4 7v12a2 2 0 0 0 2 2h10"/></svg></span><span class="lbl">فلیش کارڈ</span></button>
   <button role="tab" data-view="maker" data-sub="arabi" aria-selected="false" id="tab-maker"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg></span><span class="lbl">گردان ساز</span></button>
-  <button role="tab" data-view="vocab" data-sub="arabi" aria-selected="false" id="tab-vocab"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5.5C4.5 4 7.5 4 11 5.5v14C7.5 18 4.5 18 2 19.5z"/><path d="M22 5.5C19.5 4 16.5 4 13 5.5v14c3.5-1.5 6.5-1.5 9 0z"/></svg></span><span class="lbl">ذخیرہ</span></button>
-  <button role="tab" data-view="qawaid" data-sub="arabi" aria-selected="false" id="tab-qawaid"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h11a2 2 0 0 1 2 2v16l-3.5-2.2L12 21l-3.5-2.2L5 21V4a1 1 0 0 1 1-1z"/><path d="M9 8h6M9 12h6"/></svg></span><span class="lbl">قواعد</span></button>
+  <button role="tab" data-view="vocab" data-sub="arabi" aria-selected="false" id="tab-vocab"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5A3.5 3.5 0 0 1 6.5 2H12v18H6.5A3.5 3.5 0 0 0 3 23ZM21 5.5A3.5 3.5 0 0 0 17.5 2H12v18h5.5a3.5 3.5 0 0 1 3.5 3Z"/></svg></span><span class="lbl">ذخیرہ</span></button>
+  <button role="tab" data-view="qawaid" data-sub="arabi" aria-selected="false" id="tab-qawaid"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 0 4 22Z"/><path d="M4 5.5V19a3 3 0 0 1 3-3h13M8 7h8M8 11h8"/></svg></span><span class="lbl">قواعد</span></button>
 </nav>
 
 <main>
@@ -515,7 +522,7 @@ nav.dock button[hidden] { display: none; }
   <section class="wrap" id="view-masadir">
     <h2 class="sec">مصادر کی فہرست</h2>
     <div class="search">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
       <input id="q" type="search" placeholder="مصدر، مادہ یا معنی تلاش کریں" autocomplete="off" aria-label="تلاش">
     </div>
     <div class="filters">
@@ -562,7 +569,7 @@ nav.dock button[hidden] { display: none; }
   <section class="wrap" id="view-vocab" hidden>
     <h2 class="sec">ذخیرہ الفاظ <span class="muted" style="font-weight:400;font-size:14px">· قصص النبیین، کتاب الصرف، کتاب النحو</span></h2>
     <div class="search">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
       <input id="vq" type="search" placeholder="عربی لفظ، مادہ یا اردو معنی تلاش کریں" autocomplete="off" aria-label="ذخیرہ میں تلاش">
     </div>
     <div class="filters">
@@ -586,7 +593,7 @@ nav.dock button[hidden] { display: none; }
   <section class="wrap" id="view-qawaid" hidden>
     <h2 class="sec">قواعد کا خلاصہ <span class="muted" style="font-weight:400;font-size:14px">· کتاب الصرف اور کتاب النحو، حصہ اول، دوم و سوم</span></h2>
     <div class="search">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
       <input id="gq" type="search" placeholder="قاعدہ، اصطلاح یا مثال تلاش کریں" autocomplete="off" aria-label="قواعد میں تلاش">
     </div>
     <div class="filters">
@@ -602,7 +609,7 @@ nav.dock button[hidden] { display: none; }
   <section class="wrap" id="view-fiqh" hidden>
     <h2 class="sec">کتاب الفقہ <span class="muted" style="font-weight:400;font-size:14px">· حصہ اول (عبادات)، حصہ دوم (نکاح و طلاق)</span></h2>
     <div class="search">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
       <input id="fq" type="search" placeholder="مسئلہ، اصطلاح یا حکم تلاش کریں" autocomplete="off" aria-label="فقہ میں تلاش">
     </div>
     <div class="filters">
@@ -614,11 +621,43 @@ nav.dock button[hidden] { display: none; }
     <div class="vtables" id="fList"></div>
   </section>
 
+  <!-- USOOL HADITH -->
+  <section class="wrap" id="view-uhadith" hidden>
+    <h2 class="sec">اصول حدیث <span class="muted" style="font-weight:400;font-size:14px">· حجیتِ حدیث، اصطلاحات، کتبِ حدیث اور اصول</span></h2>
+    <div class="search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
+      <input id="uq" type="search" placeholder="اصطلاح، کتاب یا اصول تلاش کریں" autocomplete="off" aria-label="اصول حدیث میں تلاش">
+    </div>
+    <div class="filters">
+      <select class="sel" id="uBook" aria-label="باب"></select>
+      <select class="sel" id="uTopic" aria-label="عنوان"></select>
+      <div class="gtools"><button class="iconbtn" id="uOpen">سب کھولیں</button><button class="iconbtn" id="uClose">سب بند کریں</button></div>
+      <span class="count" id="uCount"></span>
+    </div>
+    <div class="vtables" id="uList"></div>
+  </section>
+
+  <!-- TAFSIR -->
+  <section class="wrap" id="view-tafsir" hidden>
+    <h2 class="sec">اصول تفسیر <span class="muted" style="font-weight:400;font-size:14px">· قرآن، وحی، جمعِ قرآن، قراءات اور مآخذِ تفسیر</span></h2>
+    <div class="search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
+      <input id="tq" type="search" placeholder="اصطلاح، عنوان یا تفسیر تلاش کریں" autocomplete="off" aria-label="اصول تفسیر میں تلاش">
+    </div>
+    <div class="filters">
+      <select class="sel" id="tBook" aria-label="باب"></select>
+      <select class="sel" id="tTopic" aria-label="عنوان"></select>
+      <div class="gtools"><button class="iconbtn" id="tOpen">سب کھولیں</button><button class="iconbtn" id="tClose">سب بند کریں</button></div>
+      <span class="count" id="tCount"></span>
+    </div>
+    <div class="vtables" id="tList"></div>
+  </section>
+
   <!-- AHADITH -->
   <section class="wrap" id="view-ahadith" hidden>
     <h2 class="sec">کتاب الحدیث <span class="muted" style="font-weight:400;font-size:14px">· حصہ اول، دوم و سوم</span></h2>
     <div class="search">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
       <input id="hq" type="search" placeholder="حدیث، لفظ، ترجمہ یا حوالہ تلاش کریں" autocomplete="off" aria-label="احادیث میں تلاش">
     </div>
     <div class="filters">
@@ -652,8 +691,8 @@ nav.dock button[hidden] { display: none; }
 
 <script>
 // ---------- data files (data/*.json, versioned by content hash) ----------
-const DATA_URL = {"core": "data/core.json?v=1f4d65c974", "guide": "data/guide.json?v=695850e939", "hadith": "data/hadith.json?v=b1dcef9a14", "fiqh": "data/fiqh.json?v=a3046100f5"};
-const DATA_META = {"guide": 216, "hadith": 583, "fiqh": 174};
+const DATA_URL = {"core": "data/core.json?v=1f4d65c974", "guide": "data/guide.json?v=695850e939", "hadith": "data/hadith.json?v=b1dcef9a14", "fiqh": "data/fiqh.json?v=a3046100f5", "uhadith": "data/uhadith.json?v=13177cda49", "tafsir": "data/tafsir.json?v=e8d8cd4078"};
+const DATA_META = {"guide": 216, "hadith": 583, "fiqh": 174, "uhadith": 43, "tafsir": 34};
 const _data = {};
 const loadData = (k) => _data[k] || (_data[k] = fetch(DATA_URL[k]).then((r) => { if (!r.ok) throw new Error(k + ' ' + r.status); return r.json(); }).catch((e) => { delete _data[k]; throw e; }));
 if ('serviceWorker' in navigator && location.protocol !== 'file:') { try { navigator.serviceWorker.register('sw.js').catch(() => {}); } catch {} }
@@ -1285,15 +1324,16 @@ $('#dockTheme').onclick = () => {
 // Subjects: each one owns a set of views (its dock tabs). Add a new subject here,
 // give its views sections + dock buttons with data-sub="<k>", and it appears on the home screen.
 const IC = {
-  book: '<path d="M2 5.5C4.5 4 7.5 4 11 5.5v14C7.5 18 4.5 18 2 19.5z"/><path d="M22 5.5C19.5 4 16.5 4 13 5.5v14c3.5-1.5 6.5-1.5 9 0z"/>',
-  grid: '<rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/>',
+  book: '<path d="M3 5.5A3.5 3.5 0 0 1 6.5 2H12v18H6.5A3.5 3.5 0 0 0 3 23ZM21 5.5A3.5 3.5 0 0 0 17.5 2H12v18h5.5a3.5 3.5 0 0 1 3.5 3Z"/>',
+  grid: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
   cards: '<rect x="6" y="3" width="13" height="16" rx="2.5"/><path d="M4 7v12a2 2 0 0 0 2 2h10"/>',
   pen: '<path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/>',
-  rules: '<path d="M6 3h11a2 2 0 0 1 2 2v16l-3.5-2.2L12 21l-3.5-2.2L5 21V4a1 1 0 0 1 1-1z"/><path d="M9 8h6M9 12h6"/>',
+  rules: '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 0 4 22Z"/><path d="M4 5.5V19a3 3 0 0 1 3-3h13M8 7h8M8 11h8"/>',
   lang: '<path d="M4 5h8M8 3v2M5.5 9.5C7 12 9 13.5 11 14.5M10.5 5c-.8 3.6-3 6.6-6 8.5"/><path d="m13 20 4-9 4 9M14.5 17h5"/>',
   quote: '<path d="M4 6h16v10H9l-5 4z"/><path d="M8 10h8M8 13h5"/>',
   chain: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
   scale: '<path d="M12 3v18M7 21h10M5 7h14"/><path d="m5 7-3 6a3 3 0 0 0 6 0zM19 7l-3 6a3 3 0 0 0 6 0z"/>',
+  quran: '<path d="M4 4h7a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H4z"/><path d="M20 4h-7a2 2 0 0 0-2 2v14a2 2 0 0 1 2-2h7z"/><path d="M7 8h2M15 8h2"/>',
   roots: '<path d="M12 3v7M12 10c-3 0-6 2-7 6M12 10c3 0 6 2 7 6M12 10v11M8 21h8"/>',
 };
 const ico = (k) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${IC[k]}</svg>`;
@@ -1307,31 +1347,34 @@ const SUBJECTS = [
   ] },
   { k: 'hadees', n: 'حدیث', d: 'احادیث کا متن، ترجمہ اور الفاظ', i: 'quote', secs: [
     { v: 'ahadith', n: 'کتاب الحدیث', d: 'حصہ اول، دوم و سوم (لفظی و بامحاورہ ترجمہ)', i: 'quote', c: () => `${DATA_META.hadith} احادیث` },
+    { v: 'uhadith', n: 'اصول حدیث', d: 'حجیتِ حدیث، اصطلاحات، کتبِ احادیث اور اہم اصول', i: 'chain', c: () => `${DATA_META.uhadith} عنوانات` },
   ] },
-  { k: 'usool-hadees', n: 'اصول حدیث', d: 'مصطلحات الحدیث کا خلاصہ', i: 'chain', soon: true },
   { k: 'fiqh', n: 'فقہ', d: 'عبادات اور عائلی احکام و مسائل کا خلاصہ', i: 'scale', secs: [
     { v: 'fiqh', n: 'کتاب الفقہ', d: 'حصہ اول: عبادات · حصہ دوم: نکاح، رضاعت، طلاق، قسم', i: 'scale', c: () => `${DATA_META.fiqh} عنوانات` },
+    { n: 'اصول فقہ', d: 'اصول فقہ کے قواعد', i: 'roots', soon: true },
   ] },
-  { k: 'usool-fiqh', n: 'اصول فقہ', d: 'اصول فقہ کے قواعد', i: 'roots', soon: true },
+  { k: 'tafsir', n: 'تفسیر', d: 'علوم القرآن اور اصولِ تفسیر', i: 'quran', secs: [
+    { v: 'tafsir', n: 'اصول تفسیر', d: 'وحی، نزول، جمعِ قرآن، قراءات، نسخ اور مآخذِ تفسیر', i: 'quran', c: () => `${DATA_META.tafsir} عنوانات` },
+  ] },
 ];
-const SUB_OF = {}; SUBJECTS.forEach((s) => (s.secs || []).forEach((x) => SUB_OF[x.v] = s.k));
+const SUB_OF = {}; SUBJECTS.forEach((s) => (s.secs || []).forEach((x) => { if (x.v) SUB_OF[x.v] = s.k; }));
 function renderHome() {
   $('#subjects').innerHTML = SUBJECTS.map((s) => s.soon
     ? `<div class="subj soon"><div class="sh"><span class="si">${ico(s.i)}</span><div><h3>${s.n}</h3><p>${esc(s.d)}</p></div><span class="badge">جلد آ رہا ہے</span></div></div>`
-    : `<div class="subj"><div class="sh"><span class="si">${ico(s.i)}</span><div><h3>${s.n}</h3><p>${esc(s.d)}</p></div></div><div class="secs">${s.secs.map((x) => `<button class="sec-l" data-go="${x.v}">${ico(x.i)}<span><b>${x.n}</b><small>${esc(x.d)}</small></span>${x.c ? `<span class="n">${x.c()}</span>` : ''}</button>`).join('')}</div></div>`).join('');
+    : `<div class="subj"><div class="sh"><span class="si">${ico(s.i)}</span><div><h3>${s.n}</h3><p>${esc(s.d)}</p></div></div><div class="secs">${s.secs.map((x) => x.soon ? `<div class="sec-l soon">${ico(x.i)}<span><b>${x.n}</b><small>${esc(x.d)}</small></span><span class="badge">جلد آ رہا ہے</span></div>` : `<button class="sec-l" data-go="${x.v}">${ico(x.i)}<span><b>${x.n}</b><small>${esc(x.d)}</small></span>${x.c ? `<span class="n">${x.c()}</span>` : ''}</button>`).join('')}</div></div>`).join('');
 }
 $('#subjects').addEventListener('click', (e) => { const b = e.target.closest('[data-go]'); if (b) location.hash = b.dataset.go; });
 const goHome = () => { location.hash = 'home'; };
 $('#brandHome').onclick = goHome; $('#brandHome').onkeydown = (e) => { if (e.key === 'Enter') goHome(); };
 let curSub = store.get('sub', 'arabi');
-const VIEWS = ['home', 'masadir', 'vocab', 'qawaid', 'ahadith', 'fiqh', 'study', 'maker'];
+const VIEWS = ['home', 'masadir', 'vocab', 'qawaid', 'ahadith', 'fiqh', 'uhadith', 'tafsir', 'study', 'maker'];
 // Lazy sections: fetch their data file on first open, then render.
 const LAZY = {};
 function withData(k, list, render) {
   if (LAZY[k] === true) return render();
   if (LAZY[k]) return;
   $(list).innerHTML = '<div class="empty">لوڈ ہو رہا ہے…</div>';
-  LAZY[k] = loadData(k).then((d) => { ({ guide: guideView.init, fiqh: fiqhView.init, hadith: initHadith })[k](d); LAZY[k] = true; render(); })
+  LAZY[k] = loadData(k).then((d) => { ({ guide: guideView.init, fiqh: fiqhView.init, uhadith: uhView.init, tafsir: tfView.init, hadith: initHadith })[k](d); LAZY[k] = true; render(); })
     .catch(() => { LAZY[k] = null; $(list).innerHTML = `<div class="empty">ڈیٹا لوڈ نہیں ہو سکا۔<br><br><button class="btn" data-retry="${k}">دوبارہ کوشش کریں</button></div>`; });
 }
 document.addEventListener('click', (e) => { if (e.target.closest('[data-retry]')) show(location.hash.slice(1) || 'home'); });
@@ -1344,6 +1387,8 @@ function show(v) {
   if (v === 'vocab') renderVocab();
   if (v === 'qawaid') withData('guide', '#gList', guideView.render);
   if (v === 'fiqh') withData('fiqh', '#fList', fiqhView.render);
+  if (v === 'uhadith') withData('uhadith', '#uList', uhView.render);
+  if (v === 'tafsir') withData('tafsir', '#tList', tfView.render);
   if (v === 'ahadith') withData('hadith', '#hList', renderHadith);
   scrollTo(0, 0);
 }
@@ -1560,6 +1605,8 @@ function refView(o) {
 }
 const guideView = refView({ p: 'g', store: 'gBook', def: 's1', all: 'تمام کتابیں', short: (b) => b.n.split(' · ')[0].replace('کتاب ', '') + ' ' + '١٢٣'[+b.k[1] - 1] });
 const fiqhView = refView({ p: 'f', store: 'fBook', def: 'f1b1', all: 'تمام ابواب', short: (b) => b.n.split(':')[0].replace('حصہ ', '') });
+const uhView = refView({ p: 'u', store: 'uBook', def: 'uhb1', all: 'تمام ابواب', short: (b) => b.n.split(':')[0] });
+const tfView = refView({ p: 't', store: 'tBook', def: 'utb1', all: 'تمام حصے', short: (b) => b.n.split('،')[0] });
 
 // ---------- ahadith (کتاب الحدیث) ----------
 let HADITH = [], hBook = store.get('hBook', 'h1'), hBab = 'all', hHide = store.get('hHide', false);
