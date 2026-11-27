@@ -1,0 +1,36 @@
+{
+  "name": "zad-ut-talib",
+  "private": true,
+  "version": "2.0.0",
+  "description": "زادُ الطالب — offline-first study companion for Dars-e-Nizami students (Urdu/Arabic PWA)",
+  "license": "GPL-3.0-or-later",
+  "type": "module",
+  "scripts": {
+    "content": "node scripts/build-content.mjs",
+    "dev": "npm run content && vite",
+    "build": "npm run content && tsc -p tsconfig.json && vite build && node scripts/postbuild.mjs",
+    "preview": "vite preview",
+    "test": "npm run content && vitest run",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@fontsource/amiri": "^5.3.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.11",
+    "@types/react": "^19.3.3",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.3.0",
+    "ajv": "^8.20.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.4.0",
+    "vite-plugin-pwa": "^2.0.0",
+    "vitest": "^5.1.2",
+    "workbox-window": "^7.4.1"
+  }
+}
